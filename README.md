@@ -47,8 +47,10 @@ variable "organization_unit_account_details" {
   default = {
     "example" = {
       organization_accounts = {
-        email_id = "example@gmail.com"
-        close_on_deletion = false
+        "account-1" = {
+            email_id = "example@gmail.com"
+            close_on_deletion = false
+        }
       }
     }
   }
