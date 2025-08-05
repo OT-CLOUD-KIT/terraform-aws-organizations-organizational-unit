@@ -1,3 +1,4 @@
+
 locals {
   organization_units = [
     for ou_name, account_details in var.organization_unit_account_details :
@@ -11,7 +12,6 @@ locals {
         organization_unit_name = ou_name,
         account_name = account_name,
         account_details = account_details
-
       })
    ])
 

@@ -22,3 +22,8 @@ variable "create_organization_unit" {
   default = true
   description  = "When you don't want to create organization unit use false"
 }
+
+variable "role_name" {
+  type    = string
+  default = "OrganizationAccountAccessRole"
+}
