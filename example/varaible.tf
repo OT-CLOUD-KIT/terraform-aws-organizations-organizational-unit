@@ -11,13 +11,9 @@ variable "organization_unit_account_details" {
       email_id          = string
       close_on_deletion = optional(bool, false)
       tags              = optional(map(string), {})
-      role_name         = string
+      role_name         = optional(string)       
     }))
   }))
 }
 
 
-variable "role_name" {
-  type    = string
-  default = "OrganizationAccountAccessRole"
-}

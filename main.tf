@@ -16,6 +16,6 @@ resource "aws_organizations_account" "accounts" {
   parent_id         = var.create_organization_unit ? aws_organizations_organizational_unit.ou[each.value.organization_unit_name].id : each.value.account_details.parent_id
   close_on_deletion = each.value.account_details.close_on_deletion
   tags              = each.value.account_details.tags
-  role_name  = var.role_name
+  role_name  = each.value.account_details.role_name
 
 }

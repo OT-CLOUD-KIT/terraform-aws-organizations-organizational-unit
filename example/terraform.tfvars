@@ -1,5 +1,4 @@
 create_organization_unit = false
-role_name         = "OrganizationAccountAccessRole"
 
 organization_unit_account_details = {
   "dev" = {
@@ -7,9 +6,12 @@ organization_unit_account_details = {
       "dev" = {
         email_id          = "nikita55@example.com"
         close_on_deletion = true
+        role_name         = "OrganizationAccountAccessRole"
+
         tags = {
           env = "dev"
-        }
+        },
+        
       }
     }
   }
@@ -20,6 +22,7 @@ organization_unit_account_details = {
 
         email_id          = "jatin33@example.com"
         close_on_deletion = true
+        role_name         = "OrganizationAccountAccessRole"
         tags = {
           env = "prod"
         }

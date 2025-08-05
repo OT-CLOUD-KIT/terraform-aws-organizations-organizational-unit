@@ -1,6 +1,6 @@
-# Terraform AWS Organizations Organizational Unit
+# Terraform AWS Organizational Unit
 
-A Terraform module to manage **AWS Organizations Organizational Units (OUs)** and optionally create **member accounts** within those OUs. This module supports multi-level OU hierarchies and reusable patterns to structure accounts based on environments, teams, or workloads.
+A Terraform module to manage **AWS Organizations Organizational Units (OUs)** and optionally create **accounts** within those OUs. This module supports multi-level OU hierarchies and reusable patterns to structure accounts based on environments, teams, or workloads.
 
 ---
 

@@ -11,6 +11,8 @@ variable "organization_unit_account_details" {
       close_on_deletion = optional(bool, false)
       parent_id         = optional(string)
       tags              = optional(map(string))
+      role_name         = optional(string)      
+
     }))
   }))
   default = null
