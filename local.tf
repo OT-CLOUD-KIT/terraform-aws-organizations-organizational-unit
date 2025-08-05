@@ -3,6 +3,8 @@ locals {
   organization_units = [
     for ou_name, account_details in var.organization_unit_account_details :
     ou_name
+    if ou_name != "root"
+
   ]
 
   organization_accounts = flatten([

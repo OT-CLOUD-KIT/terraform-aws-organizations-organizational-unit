@@ -5,6 +5,8 @@ A Terraform module to manage **AWS Organizations Organizational Units (OUs)** an
 ---
 
 ##  Architecture
+<img width="1022" height="435" alt="Screenshot from 2025-08-05 18-11-47" src="https://github.com/user-attachments/assets/45c7e145-c350-4287-a3ef-7e246bf2bba5" />
+
 
 > **Note:**  
 > The above diagram illustrates a 3-level hierarchy for an AWS Organization. The structure can be adjusted to suit specific use cases such as team-based, environment-based, or function-based organization structures.
@@ -25,8 +27,6 @@ A Terraform module to manage **AWS Organizations Organizational Units (OUs)** an
 
 ```hcl
 
-data "aws_organizations_organization" "this" {}
-
 data "aws_organizations_organization" "organization" {}
 
 module "accounts" {
@@ -37,21 +37,26 @@ module "accounts" {
   role_name                = "OrganizationAccountAccessRole"
 
   organization_unit_account_details = {
-    "dev" = {
-      name      = "dev-account"
-      email     = "dev@example.com"
-      role_name = "OrganizationAccountAccessRole"
+  "root" = {
+    organization_accounts = {
+      "dev" = {
+        email_id          = "nikita55@example.com"
+        close_on_deletion = true
+        role_name         = "OrganizationAccountAccessRole"
+        tags              = {
+          env = "dev"
+        }
+      },
+      "prod" = {
+        email_id          = "jatin33@example.com"
+        close_on_deletion = true
+        role_name         = "OrganizationAccountAccessRole"
+        tags              = {
+          env = "prod"
+        }
+      }
     }
-    "prod" = {
-      name      = "prod-account"
-      email     = "prod@example.com"
-      role_name = "OrganizationAccountAccessRole"
-    }
-    "nonprod" = {
-      name      = "nonprod-account"
-      email     = "nonprod@example.com"
-      role_name = "OrganizationAccountAccessRole"
-    }
+  }
   }
 }
 
