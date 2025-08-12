@@ -5,7 +5,7 @@ A Terraform module to manage **AWS Organizations Organizational Units (OUs)** an
 ---
 
 ##  Architecture
-<img width="1045" height="689" alt="image" src="https://github.com/user-attachments/assets/87ca4278-950c-44a8-af90-f15f4fdd45a1" />
+<img width="1022" height="435" alt="Screenshot from 2025-08-05 18-11-47" src="https://github.com/user-attachments/assets/45c7e145-c350-4287-a3ef-7e246bf2bba5" />
 
 > **Note:**  
 > The above diagram illustrates a 3-level hierarchy for an AWS Organization. The structure can be adjusted to suit specific use cases such as team-based, environment-based, or function-based organization structures.
