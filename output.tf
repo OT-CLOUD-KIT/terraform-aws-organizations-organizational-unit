@@ -1,33 +1,29 @@
-output "organization_id" {
-  description = "The ID of the AWS Organization"
-  value       = aws_organizations_organization.org.id
-}
-
-output "organization_arn" {
-  description = "The ARN of the AWS Organization"
-  value       = aws_organizations_organization.org.arn
-}
-
 output "organizational_units" {
-  description = "A map of created Organizational Units and their IDs"
-  value = {
-    for ou_key, ou in aws_organizations_organizational_unit.ou :
-    ou_key => ou.id
-  }
+  description = "List of Organizational Units created"
+  value = var.create_organization_unit ? {
+    for k, ou in aws_organizations_organizational_unit.ou :
+    k => {
+      name      = ou.name
+      id        = ou.id
+      arn       = ou.arn
+      parent_id = ou.parent_id
+    }
+  } : {}
 }
 
-output "accounts" {
-  description = "A map of created AWS accounts and their IDs"
+output "organization_accounts" {
+  description = "List of Organization Accounts created"
   value = {
-    for acc_key, acc in aws_organizations_account.accounts :
-    acc_key => acc.id
-  }
-}
-
-output "account_emails" {
-  description = "Emails of all created accounts"
-  value = {
-    for acc_key, acc in aws_organizations_account.accounts :
-    acc_key => acc.email
+    for name, account in aws_organizations_account.accounts :
+    name => {
+      name              = account.name
+      email             = account.email
+      account_id        = account.id
+      arn               = account.arn
+      parent_id         = account.parent_id
+      role_name         = account.role_name
+      tags              = account.tags
+      status            = account.status
+    }
   }
 }
