@@ -1,27 +1,19 @@
-variable "organization_unit_account_details" {
-  type = map(object({
-    organization_accounts = map(object({
-      email_id          = string
-      close_on_deletion = bool
-      parent_id         = optional(string)
-      tags              = optional(map(string))
-    }))
-  }))
+variable "default_tags" {
+  type = object({
+    ManagedBy = string
+    vertical  = string
+    tag_owner = string
+  })
   default = {
-    "EXAMPLE" = {
-      organization_accounts = {}
-    }
-    "ABCD" = {
-      organization_accounts = {}
-    }
-    "XYZ" = {
-      organization_accounts = {}
-    }
+    ManagedBy = "terraform"
+    vertical  = "otcloudkit"
+    tag_owner = "devops"
   }
-  description = "Variables of organization units and accounts"
+  description = "Common tags for all resources"
 }
 
-variable "pw_organization_unit_account_details" {
+variable "organization_unit_account_details" {
+  description = "Root level OU and its accounts"
   type = map(object({
     organization_accounts = map(object({
       email_id          = string
@@ -30,16 +22,40 @@ variable "pw_organization_unit_account_details" {
       tags              = optional(map(string))
     }))
   }))
-  default = {
-    "STAGE" = {
-      organization_accounts = {}
-    },
-    "DEV" = {
-      organization_accounts = {}
-    },
-    "PROD" = {
-      organization_accounts = {}
-    }
-  }
-  description = "Variables of child OUs of EXAMPLE organization unit"
+}
+
+variable "Workload_organization_unit_account_details" {
+  description = "Workload OU under root and its accounts"
+  type = map(object({
+    organization_accounts = map(object({
+      email_id          = string
+      close_on_deletion = bool
+      parent_id         = optional(string)
+      tags              = optional(map(string))
+    }))
+  }))
+}
+
+variable "Prod_organization_unit_account_details" {
+  description = "Prod OU under Workload and its accounts"
+  type = map(object({
+    organization_accounts = map(object({
+      email_id          = string
+      close_on_deletion = bool
+      parent_id         = optional(string)
+      tags              = optional(map(string))
+    }))
+  }))
+}
+
+variable "NonProd_organization_unit_account_details" {
+  description = "Non-Prod OU under Workload and its accounts"
+  type = map(object({
+    organization_accounts = map(object({
+      email_id          = string
+      close_on_deletion = bool
+      parent_id         = optional(string)
+      tags              = optional(map(string))
+    }))
+  }))
 }
