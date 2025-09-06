@@ -1,62 +1,106 @@
-# Organization unit
-[![Opstree Solutions][opstree_avatar]][opstree_homepage]<br/>[Opstree Solutions][opstree_homepage] 
+# Terraform AWS Organizational Unit
 
-  [opstree_homepage]: https://opstree.github.io/
-  [opstree_avatar]: https://img.cloudposse.com/150x150/https://github.com/opstree.png
+A Terraform module to manage **AWS Organizations Organizational Units (OUs)** and optionally create **accounts** within those OUs. This module supports multi-level OU hierarchies and reusable patterns to structure accounts based on environments, teams, or workloads.
 
-This module helps users in setup:
-- Creation of organization units
-- Creating new AWS account
+---
 
-## Prerequisites
-- AWS access of root account/management account of control tower with admin privilege
-- Terraform >= 1.3.0
-- AWS CLI
-## Providers
-AWS
+##  Architecture
+<img width="1022" height="435" alt="Screenshot from 2025-08-05 18-11-47" src="https://github.com/user-attachments/assets/45c7e145-c350-4287-a3ef-7e246bf2bba5" />
 
-## Inputs
-| Name | Description | Type | Default | Required |
-|-------|----------|------|-----|-----|
-|parent_id|Parent id of the OUs under which new OUs will be created| string | null | no |
-|organization_unit_account_details| About OUs name(as a key), new AWS account details such as email id, parent_id close_on_deletion| map(object)| null | yes|
-|create_organization_unit| Whether you want to create OUs or not| bool| true | no|
 
-## Output
-| Name | Description |
-|------|-------------|
-|org_unit_id|OUs which has been created by TF|
+> **Note:**  
+> The above diagram illustrates a 3-level hierarchy for an AWS Organization. The structure can be adjusted to suit specific use cases such as team-based, environment-based, or function-based organization structures.
 
-## Usage
+---
+
+##  Features
+
+- Create multi-level Organizational Units
+- Create AWS accounts within OUs
+- Tagging support
+- Modular and reusable
+- Supports cross-level parent-child relationships
+
+---
+
+##  Usage
+
 ```hcl
-module "OUs" {
-  source                            = "../"
-  parent_id                         = "o-xxxxxxxx"
-  organization_unit_account_details = var.organization_unit_account_details
-}
 
-variable "organization_unit_account_details" {
-  type = map(object({
-    organization_accounts = map(object({
-      email_id          = string
-      close_on_deletion = bool
-      parent_id         = optional(string)
-      tags              = optional(map(string))
-    }))
-  }))
-  default = {
-    "example" = {
-      organization_accounts = {
-        "account-1" = {
-            email_id = "example@gmail.com"
-            close_on_deletion = false
+data "aws_organizations_organization" "organization" {}
+
+module "accounts" {
+  source = "OT-CLOUD-KIT/terraform-aws-organizations-organizational-unit"
+
+  create_organization_unit = false
+  parent_id                = data.aws_organizations_organization.organization.roots[0].id
+  role_name                = "OrganizationAccountAccessRole"
+
+  organization_unit_account_details = {
+  "root" = {
+    organization_accounts = {
+      "dev" = {
+        email_id          = "nikita55@example.com"
+        close_on_deletion = true
+        role_name         = "OrganizationAccountAccessRole"
+        tags              = {
+          env = "dev"
+        }
+      },
+      "prod" = {
+        email_id          = "jatin33@example.com"
+        close_on_deletion = true
+        role_name         = "OrganizationAccountAccessRole"
+        tags              = {
+          env = "prod"
         }
       }
     }
   }
-  description = "Variables of organization unit"
+  }
 }
+
+
 ```
 
-### Contributor
-Ashutosh Yadav
+## Resources
+
+| Resource                                                                                                                                                 | Description                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [`aws_organizations_organizational_unit`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | Creates an Organizational Unit (OU) within AWS Organizations |
+| [`aws_organizations_account`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account)                         | Creates a new AWS account within the specified OU            |
+
+
+___
+
+## Input
+
+
+| Name                                                                                                                                                                | Description                                        | Type          | Default | Required |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------- | ------- | :------: |
+| <a name="input_default_tags"></a> [default\_tags](#input_default_tags)                                                                                              | Default tags applied to all AWS resources          | `map(string)` | `{}`    |    no    |
+| <a name="input_organization_unit_account_details"></a> [organization\_unit\_account\_details](#input_organization_unit_account_details)                             | OU and account mapping for top-level OU            | `map(any)`    | n/a     |    yes   |
+| <a name="input_Workload_organization_unit_account_details"></a> [Workload\_organization\_unit\_account\_details](#input_Workload_organization_unit_account_details) | OU and account mapping under `transbnk > Workload` | `map(any)`    | n/a     |    yes   |
+| <a name="input_Prod_organization_unit_account_details"></a> [Prod\_organization\_unit\_account\_details](#input_Prod_organization_unit_account_details)             | OU and account mapping under `Workload > Prod`     | `map(any)`    | n/a     |    yes   |
+| <a name="input_NonProd_organization_unit_account_details"></a> [NonProd\_organization\_unit\_account\_details](#input_NonProd_organization_unit_account_details)    | OU and account mapping under `Workload > Non-Prod` | `map(any)`    | n/a     |    yes   |
+
+
+___
+
+
+## Output
+
+| Name                                                                   | Description                                                                                                                                                    |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <a name="output_org_unit_id"></a> [org\_unit\_id](#output_org_unit_id) | Map of created AWS Organization Units (OUs) with their attributes (e.g., ID, ARN, etc.) as returned by the resource `aws_organizations_organizational_unit.ou` |
+
+
+___
+
+
+## Contributors
+
+- [Piyush Upadhyay](https://github.com/piiiyuushh)
+- [Nikita Joshi](https://github.com/jnikita19)
+
+
